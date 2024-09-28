@@ -19,9 +19,11 @@ jobs:
           echo "result=$result" >> $GITHUB_OUTPUT
           
       - name: Use output
+        if: steps.grep_step.outputs.result
         run: |
             echo "The grep result is: ${{ steps.grep_step.outputs.result }}"
 
       - name: Else
+        if: !steps.grep_step.outputs.result
         run: |
             echo "else  ${{ steps.grep_step.outputs.result }}"
