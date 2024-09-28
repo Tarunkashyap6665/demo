@@ -15,15 +15,13 @@ jobs:
       - name: Run grep command
         id: grep_step
         run: |
-          result=$(heroku apps | grep -wx ${{env.HEROKU_APP_NAME}})
+          result=$(heroku apps | grep -wx ${{env.HEROKU_APP_NAME}} && echo "true" || echo "false")
           echo "result=$result" >> $GITHUB_OUTPUT
           
       - name: Use output
-        if: steps.grep_step.outputs.result != env.HEROKU_APP_NAME
         run: |
             echo "The grep result is: ${{ steps.grep_step.outputs.result }}"
 
       - name: Else
-        if: steps.grep_step.outputs.result == env.HEROKU_APP_NAME
         run: |
             echo "else  ${{ steps.grep_step.outputs.result }}"
