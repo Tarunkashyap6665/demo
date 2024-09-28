@@ -36,7 +36,7 @@ jobs:
               uses: actions/checkout@v4
 
             - name: Build docker image
-              run: docker image build -t tarunkashyap6665/nextui-demo:1.0 .
+              run: docker image build -t tarunkashyap6665/nextui-demo .
 
             - name: Log in tot he Heroku Container Registry
               run: heroku container:login
@@ -45,15 +45,19 @@ jobs:
             
             - name: Create App container in Heroku
               run: heroku create nextui-demo --stack container
+              env:
+                HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
 
             - name: Tag docker image to heroku repository
-              run: docker image tag tarunkashyap6665/nextui-demo:1.0 registry.heroku.com/tarunkashyap6665/nextui-demo:1.0/web
+              run: docker image tag tarunkashyap6665/nextui-demo registry.heroku.com/tarunkashyap6665/nextui-demo/web
 
             - name: Push image to heroku repository
-              run: docker push registry.heroku.com/tarunkashyap6665/nextui-demo:1.0/web
+              run: docker push registry.heroku.com/tarunkashyap6665/nextui-demo/web
 
             - name: Release to the heroku
               run: heroku container:release web -a nextui-demo
+              env:
+                HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
 
             
             
