@@ -52,7 +52,7 @@ jobs:
                 HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
 
             - name: Tag docker image to heroku repository
-              run: docker image tag nextui-demo-appss registry.heroku.com/nextui-demo-appss/web
+              run: docker image tag nextui-demo-app registry.heroku.com/nextui-demo-appss/web
 
             - name: Push image to heroku repository
               run: docker push registry.heroku.com/nextui-demo-appss/web
