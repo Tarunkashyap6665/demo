@@ -35,6 +35,7 @@ jobs:
           app-name:
         env:
           HEROKU_APP_NAME: nextuidemoapp
+          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
         steps:
             - name: Get Code
               uses: actions/checkout@v4
@@ -44,8 +45,7 @@ jobs:
 
             - name: Log in tot he Heroku Container Registry
               run: heroku container:login
-              env:
-                HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+              
 
             - name: Check HEROKU_APP_NAME Exists
               id: checkHerokuApp
@@ -56,21 +56,16 @@ jobs:
             - name: Create App container in Heroku
               if: (${{steps.checkHerokuApp.outputs.app-name}} != $HEROKU_APP_NAME) 
               run: heroku create nextui-demo-appss --stack container
-              env:
-                HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
 
             - name: Tag docker image to heroku repository
               run: docker image tag nextui-demo-app registry.heroku.com/nextui-demo-appss/web
 
             - name: Push image to heroku repository
               run: docker push registry.heroku.com/nextui-demo-appss/web
-              env:
-                HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
 
             - name: Release to the heroku
               run: heroku container:release web -a nextui-demo-appss
-              env:
-                HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+              
 
             
             
