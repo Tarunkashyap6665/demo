@@ -1,0 +1,20 @@
+name: Example Workflow
+
+on: [push]
+
+jobs:
+  set-output-example:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Run grep command
+        id: grep_step
+        run: |
+          result=$(cat sample.txt | grep -wx 'nextui-demo')
+          echo "result=$result" >> $GITHUB_ENV
+          
+      - name: Use output
+        run: |
+            echo "The grep result is: ${{ env.result }}"
