@@ -48,7 +48,7 @@ jobs:
             - name: Check HEROKU_APP_NAME Exists
               id: checkHerokuApp
               run: |
-                  result=$(heroku apps | grep -wx $HEROKU_APP_NAME)
+                  result=$(heroku apps | grep -wx ${{env.HEROKU_APP_NAME}})
                   echo "appname=$result" >> $GITHUB_ENV
             
             - name: Create App container in Heroku
