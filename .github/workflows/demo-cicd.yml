@@ -39,7 +39,7 @@ jobs:
               run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
 
             - name: Build docker image
-              run: docker image build -t tarunkashyap6665/nextui-demo-app .
+              run: docker image build -t nextui-demo-app .
 
             - name: Log in tot he Heroku Container Registry
               run: heroku container:login
@@ -47,20 +47,20 @@ jobs:
                 HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
             
             - name: Create App container in Heroku
-              run: heroku create nextui-demo-app --stack container
+              run: heroku create nextui-demo-appss --stack container
               env:
                 HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
 
             - name: Tag docker image to heroku repository
-              run: docker image tag tarunkashyap6665/nextui-demo-app registry.heroku.com/tarunkashyap6665/nextui-demo-app/web
+              run: docker image tag nextui-demo-appss registry.heroku.com/nextui-demo-appss/web
 
             - name: Push image to heroku repository
-              run: docker push registry.heroku.com/tarunkashyap6665/nextui-demo-app/web
+              run: docker push registry.heroku.com/nextui-demo-appss/web
               env:
                 HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
 
             - name: Release to the heroku
-              run: heroku container:release web -a nextui-demo-app
+              run: heroku container:release web -a nextui-demo-appss
               env:
                 HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
 
