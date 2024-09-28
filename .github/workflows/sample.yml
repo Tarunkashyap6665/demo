@@ -5,7 +5,7 @@ on: [push]
 jobs:
   set-output-example:
     env:
-        HEROKU_APP_NAME: nextui-demo
+        HEROKU_APP_NAME: nextui-demo1
         HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
     runs-on: ubuntu-latest
     steps:
@@ -26,4 +26,4 @@ jobs:
       - name: Else
         if: steps.grep_step.outputs.result == env.HEROKU_APP_NAME
         run: |
-            echo "else"
+            echo "else  ${{ steps.grep_step.outputs.result }}"
