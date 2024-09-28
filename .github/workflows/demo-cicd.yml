@@ -35,6 +35,9 @@ jobs:
             - name: Get Code
               uses: actions/checkout@v4
 
+            - name: Login Docker
+              run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
+
             - name: Build docker image
               run: docker image build -t tarunkashyap6665/nextui-demo-app .
 
