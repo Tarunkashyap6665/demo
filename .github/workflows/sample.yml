@@ -24,6 +24,5 @@ jobs:
             echo "The grep result is: ${{ steps.grep_step.outputs.result }}"
 
       - name: Else
-        if: !steps.grep_step.outputs.result
         run: |
             echo "else  ${{ steps.grep_step.outputs.result }}"
