@@ -4,6 +4,8 @@ on: [push]
 
 jobs:
   set-output-example:
+    env:
+        HEROKU_APP_NAME: nextui-demo
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -12,9 +14,15 @@ jobs:
       - name: Run grep command
         id: grep_step
         run: |
-          result=$(cat sample.txt | grep -wx 'nextui-demo')
-          echo "result=$result" >> $GITHUB_ENV
+          result=$(cat sample.txt | grep -wx ${{env.HEROKU_APP_NAME}})
+          echo "result=$result" >> $GITHUB_OUTPUT
           
       - name: Use output
+        if: steps.grep_step.outputs.result == env.HEROKU_APP_NAME
         run: |
             echo "The grep result is: ${{ env.result }}"
+
+      - name: Else
+        if: steps.grep_step.outputs.result != env.HEROKU_APP_NAME
+        run: |
+            echo "else"
