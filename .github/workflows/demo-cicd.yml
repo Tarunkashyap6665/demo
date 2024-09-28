@@ -31,8 +31,6 @@ jobs:
     deploy:
         name: Deploy to Heroku
         runs-on: ubuntu-latest
-        outputs:
-          app-name:
         env:
           HEROKU_APP_NAME: nextuidemoapp
           HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
@@ -51,10 +49,10 @@ jobs:
               id: checkHerokuApp
               run: |
                   result=$(heroku apps | grep -wx $HEROKU_APP_NAME)
-                  echo "app-name=$result" >> $GITHUB_OUTPUT
+                  echo "appname=$result" >> $GITHUB_ENV
             
             - name: Create App container in Heroku
-              if: (${{steps.checkHerokuApp.outputs.app-name}} != $HEROKU_APP_NAME) 
+              if: (${{ env.appname }} != $HEROKU_APP_NAME) 
               run: heroku create nextui-demo-appss --stack container
 
             - name: Tag docker image to heroku repository
