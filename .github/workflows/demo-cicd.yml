@@ -42,6 +42,18 @@ jobs:
               run: heroku container:login
               env:
                 HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+            
+            - name: Create App container in Heroku
+              run: heroku create nextui-demo --stack container
+
+            - name: Tag docker image to heroku repository
+              run: docker image tag tarunkashyap6665/nextui-demo:1.0 registry.heroku.com/tarunkashyap6665/nextui-demo:1.0/web
+
+            - name: Push image to heroku repository
+              run: docker push registry.heroku.com/tarunkashyap6665/nextui-demo:1.0/web
+
+            - name: Release to the heroku
+              run: heroku container:release web -a nextui-demo
 
             
             
