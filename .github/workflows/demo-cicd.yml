@@ -27,5 +27,21 @@ jobs:
             
             - name: Check docker image is creating or not
               run: docker image build -t nextui-demo .
+
+    deploy:
+        name: Deploy to Heroku
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get Code
+              uses: actions/checkout@v4
+
+            - name: Build docker image
+              run: docker image build -t tarunkashyap6665/nextui-demo:1.0 .
+
+            - name: Log in tot he Heroku Container Registry
+              run: heroku container:login
+              env:
+                HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+
             
             
