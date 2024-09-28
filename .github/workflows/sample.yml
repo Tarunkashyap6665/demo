@@ -18,11 +18,11 @@ jobs:
           echo "result=$result" >> $GITHUB_OUTPUT
           
       - name: Use output
-        if: steps.grep_step.outputs.result == env.HEROKU_APP_NAME
+        if: steps.grep_step.outputs.result != env.HEROKU_APP_NAME
         run: |
             echo "The grep result is: ${{ steps.grep_step.outputs.result }}"
 
       - name: Else
-        if: steps.grep_step.outputs.result != env.HEROKU_APP_NAME
+        if: steps.grep_step.outputs.result == env.HEROKU_APP_NAME
         run: |
             echo "else"
