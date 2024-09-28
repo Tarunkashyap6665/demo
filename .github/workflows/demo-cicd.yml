@@ -31,6 +31,10 @@ jobs:
     deploy:
         name: Deploy to Heroku
         runs-on: ubuntu-latest
+        outputs:
+          app-name:
+        env:
+          HEROKU_APP_NAME: nextuidemoapp
         steps:
             - name: Get Code
               uses: actions/checkout@v4
@@ -40,6 +44,18 @@ jobs:
 
             - name: Log in tot he Heroku Container Registry
               run: heroku container:login
+              env:
+                HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+
+            - name: Check HEROKU_APP_NAME Exists
+              id: checkHerokuApp
+              run: |
+                  result=$(heroku apps | grep -wx $HEROKU_APP_NAME)
+                  echo "app-name=$result" >> $GITHUB_OUTPUT
+            
+            - name: Create App container in Heroku
+              if: (${{steps.checkHerokuApp.outputs.app-name}} != $HEROKU_APP_NAME) 
+              run: heroku create nextui-demo-appss --stack container
               env:
                 HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
 
