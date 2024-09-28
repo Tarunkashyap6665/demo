@@ -15,7 +15,7 @@ jobs:
       - name: Run grep command
         id: grep_step
         run: |
-          result=$(heroku apps | grep -wx ${{env.HEROKU_APP_NAME}} && echo "true" || echo "false")
+          result=$(heroku apps | grep -wx ${{env.HEROKU_APP_NAME}} && echo "tru" || echo "false")
           echo "result=$result" >> $GITHUB_OUTPUT
           
       - name: Use output
