@@ -1,0 +1,31 @@
+name: Deploy NextUI on Heroku
+
+on:
+    push:
+        branches: 
+            ["main"]
+    workflow_dispatch: 
+
+jobs:
+    test:
+        name: Test NextUI
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get Code
+              uses: actions/checkout@v4
+
+            - name: Install Node.Js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20.6.0
+
+            - name: Install Dependancies
+              run: npm install
+
+            - name: Test lint
+              run: npm run lint
+            
+            - name: Check docker image is creating or not
+              run: docker image build -t nextui-demo .
+            
+            
