@@ -6,6 +6,7 @@ jobs:
   set-output-example:
     env:
         HEROKU_APP_NAME: nextui-demo
+        HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -14,7 +15,7 @@ jobs:
       - name: Run grep command
         id: grep_step
         run: |
-          result=$(cat sample.txt | grep -wx ${{env.HEROKU_APP_NAME}})
+          result=$(heroku apps | grep -wx ${{env.HEROKU_APP_NAME}})
           echo "result=$result" >> $GITHUB_OUTPUT
           
       - name: Use output
