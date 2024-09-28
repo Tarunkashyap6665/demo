@@ -35,9 +35,6 @@ jobs:
             - name: Get Code
               uses: actions/checkout@v4
 
-            - name: Login Docker
-              run: docker login -u ${{ secrets.DOCKER_USERNAME }} -p ${{ secrets.DOCKER_PASSWORD }}
-
             - name: Build docker image
               run: docker image build -t nextui-demo-app .
 
@@ -45,14 +42,9 @@ jobs:
               run: heroku container:login
               env:
                 HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
-            
-            - name: Create App container in Heroku
-              run: heroku create nextui-demo-appss --stack container
-              env:
-                HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
 
             - name: Tag docker image to heroku repository
-              run: docker image tag nextui-demo-appss registry.heroku.com/nextui-demo-appss/web
+              run: docker image tag nextui-demo-app registry.heroku.com/nextui-demo-appss/web
 
             - name: Push image to heroku repository
               run: docker push registry.heroku.com/nextui-demo-appss/web
