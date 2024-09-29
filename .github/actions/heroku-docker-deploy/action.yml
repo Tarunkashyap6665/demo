@@ -17,21 +17,26 @@ runs:
     steps:
         - name: Build docker image
           run: docker image build -t ${{inputs.HEROKU_APP_NAME}} .
+          shell: bash
         - name: Log in tot he Heroku Container Registry
           run: heroku container:login             
+          shell: bash
         - name: Check HEROKU_APP_NAME Exists
           id: checkHerokuApp
           run: |
             result=$(heroku apps | grep -wx ${{inputs.HEROKU_APP_NAME}} > /dev/null && echo "true" || echo "false"); echo "result=$result" >> $GITHUB_OUTPUT
             echo "appNameExists=$result" >> $GITHUB_OUTPUT
-        
+          shell: bash
         - name: Create App container in Heroku
           if: steps.checkHerokuApp.outputs.appNameExists == 'false'
           run: heroku create ${{inputs.HEROKU_APP_NAME}} --stack container
+          shell: bash
         - name: Tag docker image to heroku repository
           run: docker image tag ${{inputs.HEROKU_APP_NAME}} registry.heroku.com/${{inputs.HEROKU_APP_NAME}}/web
+          shell: bash
         - name: Push image to heroku repository
           run: docker push registry.heroku.com/${{inputs.HEROKU_APP_NAME}}/web
+          shell: bash
         - name: Release to the heroku
           run: heroku container:release web -a ${{inputs.HEROKU_APP_NAME}}
-        
+          shell: bash
