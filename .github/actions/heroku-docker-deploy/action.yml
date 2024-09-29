@@ -28,7 +28,7 @@ runs:
           run: heroku container:login             
           shell: bash
           env:
-            HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+            HEROKU_API_KEY: ${{inputs.HEROKU_API_KEY}}
         - name: Check HEROKU_APP_NAME Exists
           id: checkHerokuApp
           run: |
@@ -36,13 +36,13 @@ runs:
             echo "appNameExists=$result" >> $GITHUB_OUTPUT
           shell: bash
           env:
-            HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+            HEROKU_API_KEY: ${{inputs.HEROKU_API_KEY}}
         - name: Create App container in Heroku
           if: steps.checkHerokuApp.outputs.appNameExists == 'false'
           run: heroku create ${{inputs.HEROKU_APP_NAME}} --stack container
           shell: bash
           env:
-            HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+            HEROKU_API_KEY: ${{inputs.HEROKU_API_KEY}}
         - name: Tag docker image to heroku repository
           run: docker image tag ${{inputs.HEROKU_APP_NAME}} registry.heroku.com/${{inputs.HEROKU_APP_NAME}}/web
           shell: bash
@@ -53,4 +53,4 @@ runs:
           run: heroku container:release web -a ${{inputs.HEROKU_APP_NAME}}
           shell: bash
           env:
-            HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+            HEROKU_API_KEY: ${{inputs.HEROKU_API_KEY}}
