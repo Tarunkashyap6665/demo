@@ -31,37 +31,13 @@ jobs:
     deploy:
         name: Deploy to Heroku
         runs-on: ubuntu-latest
-        env:
-          HEROKU_APP_NAME: nextui-demo
-          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
         steps:
-            - name: Get Code
-              uses: actions/checkout@v4
+          - name: Deploy to Heroku
+            uses: ./.github/actions/heroku-docker-deploy
+            with:
+              HEROKU_APP_NAME: nextui-demo
+              HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
 
-            - name: Build docker image
-              run: docker image build -t ${{env.HEROKU_APP_NAME}} .
-
-            - name: Log in tot he Heroku Container Registry
-              run: heroku container:login             
-
-            - name: Check HEROKU_APP_NAME Exists
-              id: checkHerokuApp
-              run: |
-                result=$(heroku apps | grep -wx ${{env.HEROKU_APP_NAME}} > /dev/null && echo "true" || echo "false"); echo "result=$result" >> $GITHUB_OUTPUT
-                echo "appNameExists=$result" >> $GITHUB_OUTPUT
-            
-            - name: Create App container in Heroku
-              if: steps.checkHerokuApp.outputs.appNameExists == 'false'
-              run: heroku create ${{env.HEROKU_APP_NAME}} --stack container
-
-            - name: Tag docker image to heroku repository
-              run: docker image tag ${{env.HEROKU_APP_NAME}} registry.heroku.com/${{env.HEROKU_APP_NAME}}/web
-
-            - name: Push image to heroku repository
-              run: docker push registry.heroku.com/${{env.HEROKU_APP_NAME}}/web
-
-            - name: Release to the heroku
-              run: heroku container:release web -a ${{env.HEROKU_APP_NAME}}
               
 
             

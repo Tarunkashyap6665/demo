@@ -1,0 +1,68 @@
+name: Deploy NextUI on Heroku
+
+on:
+    push:
+        branches: 
+            ["main"]
+    workflow_dispatch: 
+
+jobs:
+    test:
+        name: Test NextUI
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get Code
+              uses: actions/checkout@v4
+
+            - name: Install Node.Js
+              uses: actions/setup-node@v4
+              with:
+                node-version: 20.6.0
+
+            - name: Install Dependancies
+              run: npm install
+
+            - name: Test lint
+              run: npm run lint
+            
+            - name: Check docker image is creating or not
+              run: docker image build -t nextui-demo-app .
+
+    deploy:
+        name: Deploy to Heroku
+        runs-on: ubuntu-latest
+        env:
+          HEROKU_APP_NAME: nextui-demo
+          HEROKU_API_KEY: ${{secrets.HEROKU_API_KEY}}
+        steps:
+            - name: Get Code
+              uses: actions/checkout@v4
+
+            - name: Build docker image
+              run: docker image build -t ${{env.HEROKU_APP_NAME}} .
+
+            - name: Log in tot he Heroku Container Registry
+              run: heroku container:login             
+
+            - name: Check HEROKU_APP_NAME Exists
+              id: checkHerokuApp
+              run: |
+                result=$(heroku apps | grep -wx ${{env.HEROKU_APP_NAME}} > /dev/null && echo "true" || echo "false"); echo "result=$result" >> $GITHUB_OUTPUT
+                echo "appNameExists=$result" >> $GITHUB_OUTPUT
+            
+            - name: Create App container in Heroku
+              if: steps.checkHerokuApp.outputs.appNameExists == 'false'
+              run: heroku create ${{env.HEROKU_APP_NAME}} --stack container
+
+            - name: Tag docker image to heroku repository
+              run: docker image tag ${{env.HEROKU_APP_NAME}} registry.heroku.com/${{env.HEROKU_APP_NAME}}/web
+
+            - name: Push image to heroku repository
+              run: docker push registry.heroku.com/${{env.HEROKU_APP_NAME}}/web
+
+            - name: Release to the heroku
+              run: heroku container:release web -a ${{env.HEROKU_APP_NAME}}
+              
+
+            
+            
