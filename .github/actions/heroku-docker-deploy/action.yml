@@ -13,9 +13,7 @@ inputs:
         required: true
 
 runs:
-    using: 'composite'
-    env:
-        HEROKU_API_KEY: ${{inputs.HEROKU_API_KEY}}
+    using: "composite"
     steps:
         - name: Build docker image
           run: docker image build -t ${{inputs.HEROKU_APP_NAME}} .
