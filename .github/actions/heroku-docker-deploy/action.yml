@@ -12,8 +12,8 @@ inputs:
       description: "The API key used to authenticate with Heroku for deployment."
       required: true
 
-    DOCKERFILE_PATH:
-      description: "The file path to your Dockerfile, specifying how the app image is built."
+    DOCKERFILE_NAME:
+      description: "he path to the Dockerfile used for building the container."
       required: false
       default: "./Dockerfile"
 
@@ -22,7 +22,7 @@ runs:
     using: "composite"
     steps:
         - name: Build docker image
-          run: docker image build -t ${{inputs.HEROKU_APP_NAME}} -f ${{inputs.DOCKERFILE_PATH}}
+          run: docker image build -t ${{inputs.HEROKU_APP_NAME}} -f ${{inputs.DOCKERFILE_NAME}} .
           shell: bash
         - name: Log in tot he Heroku Container Registry
           run: heroku container:login             
