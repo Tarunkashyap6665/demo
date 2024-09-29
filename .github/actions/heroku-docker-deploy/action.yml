@@ -17,6 +17,11 @@ inputs:
       required: false
       default: "./Dockerfile"
 
+outputs:
+    HEROKU_APP_URL:
+      description: "The URL of the deployed Heroku app."
+      value: ${{steps.appRelease.outputs.heroku_app_url}}
+
 
 runs:
     using: "composite"
@@ -50,7 +55,11 @@ runs:
           run: docker push registry.heroku.com/${{inputs.HEROKU_APP_NAME}}/web
           shell: bash
         - name: Release to the heroku
-          run: heroku container:release web -a ${{inputs.HEROKU_APP_NAME}}
+          id: appRelease
+          run: |
+            heroku container:release web -a ${{inputs.HEROKU_APP_NAME}}
+            app_url=$(heroku apps:info -a ${{inputs.HEROKU_APP_NAME}} | grep "Web URL")
+            echo "heroku_app_url=$app_url" >> $GITHUB_OUTPUT
           shell: bash
           env:
             HEROKU_API_KEY: ${{inputs.HEROKU_API_KEY}}
