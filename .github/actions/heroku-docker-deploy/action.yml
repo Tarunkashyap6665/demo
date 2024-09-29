@@ -17,8 +17,6 @@ runs:
     env:
         HEROKU_API_KEY: ${{inputs.HEROKU_API_KEY}}
     steps:
-        - name: Get Code
-          uses: actions/checkout@v4
         - name: Build docker image
           run: docker image build -t ${{inputs.HEROKU_APP_NAME}} .
         - name: Log in tot he Heroku Container Registry
